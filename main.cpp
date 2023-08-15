@@ -1,9 +1,11 @@
-#include <opencv2/core/core.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
-#include <opencv2/highgui/highgui.hpp>
+#include "opencv2/core/core.hpp"
+#include "opencv2/imgproc/imgproc.hpp"
+#include "opencv2/highgui/highgui.hpp"
 #include "addseam.hpp"
 #include "global_warp.hpp"
+
 using namespace cv;
+
 void my_imfillholes(Mat &src)
 {
 	vector<vector<Point>> contours;
@@ -15,15 +17,16 @@ void my_imfillholes(Mat &src)
 		{
 			if (contours[idx].size()<100)
             {
-				drawContours(src,contours,idx, Scalar::all(0),CV_FILLED,8);
+				drawContours(src,contours,idx, Scalar::all(0),cv::FILLED,8);
 			}
 		}
 	}
 }
+
 int mask_fg(Mat& rgbImg,int thrs,Mat &mask)
 {
 	Mat grayImg;
-	cvtColor(rgbImg,grayImg,CV_BGR2GRAY);
+	cvtColor(rgbImg,grayImg,cv::COLOR_BGR2GRAY);
 	int rows = rgbImg.rows;
 	int cols = rgbImg.cols;
 	for (int i=0;i<rows;i++){
@@ -59,6 +62,7 @@ int mask_fg(Mat& rgbImg,int thrs,Mat &mask)
 	}
 	return 0;
 }
+
 int main(int argc, char *argv[])
 {
     int ths=254;
@@ -75,7 +79,7 @@ int main(int argc, char *argv[])
     int s=col*row;
     double scale=sqrt((double)250000/s);
     resize(img,oriimg,Size(col*scale,row*scale) ,0, 0, INTER_NEAREST);
-    cvtColor(img,grayImg, CV_BGR2GRAY);
+    cvtColor(img,grayImg, cv::COLOR_BGR2GRAY);
     Mat mask(Size(img.cols,img.rows),CV_8UC1);
     resize(mask,orimask,Size(col*scale,row*scale),0, 0, INTER_NEAREST);
     Mat disimg=Mat::zeros(Size(oriimg.cols,oriimg.rows),CV_32FC2);
@@ -83,6 +87,7 @@ int main(int argc, char *argv[])
     localwrap(oriimg,orimask,disimg,new_img);
     global_warp(oriimg,disimg,orimask,outimg);
     resize(outimg,outimg,Size(col,row),0, 0, INTER_NEAREST);
+	imwrite("./output.jpg",outimg);
     imshow("final",outimg);
     waitKey(0);
     return 0;

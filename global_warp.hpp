@@ -1,12 +1,14 @@
-#include<bits/stdc++.h>
-#include<iostream>
-#include<opencv2/core/core.hpp>
-#include<opencv2/highgui/highgui.hpp>
-#include<opencv2/imgproc/imgproc.hpp>
-#include<Eigen\Dense>
+#include "bits_stdc++.h"
+#include <iostream>
+#include <opencv2/core/core.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
+#include <Eigen\Dense>
 #include <Eigen/Sparse>
 #include <Eigen/SparseLU>
 #include <opencv2/core/eigen.hpp>
+
+
 const double pi=acos(-1.0);
 using namespace std ;
 using namespace cv;
@@ -378,7 +380,7 @@ void global_warp(Mat& img,Mat& disimg,Mat& mask,Mat& output)
 
     /***************line cut*********************/
     Mat img_gray;
-	cvtColor(img,img_gray,CV_BGR2GRAY);
+	cvtColor(img,img_gray,cv::COLOR_BGR2GRAY);
 	Mat line_gray=img_gray.clone();
 	Mat imgx=img_gray.clone();
 	vector<Vec4f>lines;
@@ -386,8 +388,10 @@ void global_warp(Mat& img,Mat& disimg,Mat& mask,Mat& output)
     ls->detect(img_gray,lines);
     Mat drawnLines(img_gray);
 	ls->drawSegments(drawnLines, lines);
-	//imshow("Standard refinement", drawnLines);
-	//waitKey(1000);
+
+	imshow("Standard refinement", drawnLines);
+	waitKey(1000);
+    
 	int line_num=lines.size();
 	int num[y_num][x_num];
 	memset(num,0,sizeof(num));
